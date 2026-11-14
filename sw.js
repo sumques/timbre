@@ -1,6 +1,6 @@
 /* 音色判读 — Service Worker
    目的：断网也能打开（缓存优先），不是加速。 */
-const CACHE = "timbre-scope-v3";
+const CACHE = "timbre-scope-v5";
 const ASSETS = [
   "./",
   "./index.html",
