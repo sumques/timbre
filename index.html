@@ -108,7 +108,7 @@ td:first-child{color:var(--acc);white-space:nowrap;width:76px;font-weight:600}
     </div>
     <div class="scoperow">
       <button class="scbtn act" id="scExam">考试 6 种</button>
-      <button class="scbtn" id="scAll">全库 26 种</button>
+      <button class="scbtn" id="scAll">全库 25 种</button>
     </div>
     <div id="sessTop" class="sessTop">—</div>
     <ul class="cand" id="sessCand"></ul>
@@ -144,33 +144,40 @@ td:first-child{color:var(--acc);white-space:nowrap;width:76px;font-weight:600}
 
 /* ===== 原型：由合成模板经特征提取反向标定 ===== */
 const PROTO = [
-  {n:"短笛",      eo:-0.81, cen:1.52, hi:0.006, perc:0, noise:0.000, vib:0.20, reg:[600,4200], fam:"边棱"},
-  {n:"长笛",      eo:-0.91, cen:1.46, hi:0.006, perc:0, noise:0.000, vib:0.11, reg:[260,2100], fam:"边棱"},
-  {n:"双簧管",    eo:-0.12, cen:3.89, hi:0.094, perc:0, noise:0.000, vib:0.16, reg:[230,1400], fam:"双簧"},
-  {n:"英国管",    eo:-0.10, cen:3.99, hi:0.109, perc:0, noise:0.000, vib:0.00, reg:[230,900],  fam:"双簧"},
-  {n:"单簧管",    eo:-1.54, cen:3.86, hi:0.081, perc:0, noise:0.000, vib:0.00, reg:[150,2000], fam:"簧片"},
-  {n:"低音单簧管",eo:-1.38, cen:3.77, hi:0.073, perc:0, noise:0.000, vib:0.00, reg:[80,700],   fam:"簧片"},
-  {n:"巴松",      eo:-0.10, cen:4.17, hi:0.127, perc:0, noise:0.000, vib:0.00, reg:[60,400],   fam:"双簧"},
-  {n:"低音巴松",  eo:-0.10, cen:4.01, hi:0.107, perc:0, noise:0.000, vib:0.00, reg:[40,200],   fam:"双簧"},
-  {n:"萨克斯",    eo:-0.08, cen:4.23, hi:0.142, perc:0, noise:0.001, vib:0.00, reg:[100,700],  fam:"双簧"},
-  {n:"圆号",      eo:-0.43, cen:1.91, hi:0.002, perc:0, noise:0.000, vib:0.00, reg:[65,700],   fam:"铜管"},
-  {n:"小号",      eo:-0.05, cen:4.98, hi:0.282, perc:0, noise:0.000, vib:0.00, reg:[165,1000], fam:"铜管"},
-  {n:"长号",      eo:-0.09, cen:4.38, hi:0.158, perc:0, noise:0.000, vib:0.00, reg:[80,600],   fam:"铜管"},
-  {n:"大号",      eo:-0.30, cen:2.34, hi:0.009, perc:0, noise:0.000, vib:0.00, reg:[30,300],   fam:"铜管"},
-  {n:"定音鼓",    eo:-0.03, cen:6.40, hi:0.644, perc:1, noise:0.054, vib:0.00, reg:[60,300],   fam:"打击"},
-  {n:"钢片琴",    eo:-0.39, cen:4.37, hi:0.150, perc:1, noise:0.009, vib:0.00, reg:[500,2000], fam:"键盘拨弦"},
-  {n:"颤音琴",    eo:-0.23, cen:4.26, hi:0.113, perc:1, noise:0.006, vib:0.00, reg:[200,1800], fam:"键盘拨弦"},
-  {n:"马林巴",    eo:-0.17, cen:4.51, hi:0.135, perc:1, noise:0.009, vib:0.00, reg:[100,1400], fam:"键盘拨弦"},
-  {n:"木琴",      eo:-0.07, cen:6.03, hi:0.379, perc:1, noise:0.041, vib:0.00, reg:[500,4000], fam:"键盘拨弦"},
-  {n:"竖琴",      eo:-0.17, cen:4.05, hi:0.127, perc:1, noise:0.007, vib:0.00, reg:[30,3000],  fam:"键盘拨弦"},
-  {n:"钢琴",      eo:-0.15, cen:4.06, hi:0.123, perc:1, noise:0.009, vib:0.00, reg:[27,4186],  fam:"键盘拨弦"},
-  {n:"管风琴",    eo:-0.14, cen:4.11, hi:0.113, perc:0, noise:0.000, vib:0.00, reg:[16,4000],  fam:"风琴"},
-  {n:"小提琴",    eo:-0.12, cen:4.12, hi:0.122, perc:0, noise:0.000, vib:0.52, reg:[196,3136], fam:"弓弦"},
-  {n:"中提琴",    eo:-0.13, cen:3.95, hi:0.103, perc:0, noise:0.000, vib:0.51, reg:[130,2100], fam:"弓弦"},
-  {n:"大提琴",    eo:-0.10, cen:4.04, hi:0.114, perc:0, noise:0.000, vib:0.35, reg:[65,1000],  fam:"弓弦"},
-  {n:"低音提琴",  eo:-0.13, cen:3.73, hi:0.076, perc:0, noise:0.000, vib:0.00, reg:[40,300],   fam:"弓弦"},
-  {n:"吉他",      eo:-0.11, cen:4.85, hi:0.184, perc:1, noise:0.015, vib:0.00, reg:[82,1300],  fam:"键盘拨弦"}
+  {n:"短笛", eo:1.98, cen:2.63, hi:0.000, perc:0, noise:0.002, vib:0.80, reg:[600,4200], fam:"边棱"},
+  {n:"长笛", eo:-0.92, cen:2.00, hi:0.010, perc:0, noise:0.002, vib:0.00, reg:[260,2100], fam:"边棱"},
+  {n:"低音长笛", eo:-0.82, cen:1.80, hi:0.000, perc:0, noise:0.002, vib:0.00, reg:[180,1400], fam:"边棱"},
+  {n:"双簧管", eo:0.17, cen:2.28, hi:0.000, perc:0, noise:0.002, vib:0.00, reg:[230,1400], fam:"双簧"},
+  {n:"英国管", eo:-0.08, cen:2.26, hi:0.010, perc:0, noise:0.002, vib:0.51, reg:[180,900], fam:"双簧"},
+  {n:"单簧管", eo:-0.92, cen:1.28, hi:0.000, perc:0, noise:0.002, vib:0.00, reg:[150,2000], fam:"簧片"},
+  {n:"低音单簧管", eo:-0.77, cen:4.15, hi:0.050, perc:0, noise:0.002, vib:0.00, reg:[80,700], fam:"簧片"},
+  {n:"萨克斯", eo:-0.12, cen:4.78, hi:0.160, perc:1, noise:0.002, vib:0.00, reg:[100,700], fam:"双簧"},
+  {n:"巴松", eo:0.15, cen:3.50, hi:0.010, perc:0, noise:0.002, vib:0.00, reg:[60,400], fam:"双簧"},
+  {n:"低音巴松", eo:-0.31, cen:3.66, hi:0.030, perc:0, noise:0.002, vib:0.00, reg:[40,200], fam:"双簧"},
+  {n:"圆号", eo:-0.01, cen:2.00, hi:0.000, perc:0, noise:0.002, vib:0.00, reg:[65,700], fam:"铜管"},
+  {n:"小号", eo:0.08, cen:3.62, hi:0.040, perc:0, noise:0.002, vib:0.00, reg:[165,1000], fam:"铜管"},
+  {n:"长号", eo:-0.21, cen:1.88, hi:0.000, perc:1, noise:0.002, vib:0.00, reg:[80,600], fam:"铜管"},
+  {n:"大号", eo:-0.33, cen:1.71, hi:0.000, perc:0, noise:0.002, vib:0.00, reg:[30,300], fam:"铜管"},
+  {n:"马林巴", eo:-0.34, cen:3.87, hi:0.000, perc:0, noise:0.002, vib:0.17, reg:[100,1400], fam:"键盘拨弦"},
+  {n:"颤音琴", eo:0.25, cen:3.07, hi:0.010, perc:1, noise:0.002, vib:0.00, reg:[200,1800], fam:"键盘拨弦"},
+  {n:"定音鼓", eo:-0.03, cen:3.77, hi:0.030, perc:0, noise:0.002, vib:0.00, reg:[60,300], fam:"打击"},
+  {n:"钟琴", eo:-0.05, cen:4.62, hi:0.070, perc:1, noise:0.002, vib:0.00, reg:[1000,4000], fam:"键盘拨弦"},
+  {n:"木琴", eo:-0.51, cen:3.74, hi:0.070, perc:1, noise:0.002, vib:0.00, reg:[500,4000], fam:"键盘拨弦"},
+  {n:"竖琴", eo:-0.05, cen:2.57, hi:0.010, perc:0, noise:0.002, vib:0.00, reg:[30,3000], fam:"键盘拨弦"},
+  {n:"钢琴", eo:0.05, cen:3.96, hi:0.030, perc:0, noise:0.002, vib:0.00, reg:[27,4186], fam:"键盘拨弦"},
+  {n:"小提琴", eo:-0.14, cen:3.35, hi:0.070, perc:0, noise:0.002, vib:0.00, reg:[196,3136], fam:"弓弦"},
+  {n:"中提琴", eo:-0.19, cen:3.35, hi:0.050, perc:0, noise:0.002, vib:0.57, reg:[130,2100], fam:"弓弦"},
+  {n:"大提琴", eo:-0.25, cen:2.50, hi:0.020, perc:0, noise:0.002, vib:0.00, reg:[65,1000], fam:"弓弦"},
+  {n:"低音提琴", eo:-0.03, cen:3.89, hi:0.070, perc:0, noise:0.002, vib:0.00, reg:[40,300], fam:"弓弦"},
 ];
+
+/* 族 → 成员，直接由 PROTO 生成，改乐器清单不用同步改这里 */
+const FAM_MEMBERS = {};
+for(const p of PROTO){
+  if(!FAM_MEMBERS[p.fam]) FAM_MEMBERS[p.fam] = [];
+  FAM_MEMBERS[p.fam].push(p.n);
+}
+const FAM_ORDER = Object.keys(FAM_MEMBERS);
 
 const SIG = {eo:0.30, cen:0.90, hi:0.10, perc:0.55, noise:0.18, vib:0.50};
 const WGT = {eo:1.10, cen:1.00, hi:0.55, perc:1.25, noise:0.45, vib:0.35};
@@ -178,26 +185,17 @@ const REG_W = 1.4;
 const DIMS = ["eo","cen","hi","perc","noise","vib"];
 
 const REF = [
-  ["无起音",  "声音平着出来、没有「啪」→ 管风琴"],
-  ["只有奇次", "偶/奇 < 0.30，只剩 1/3/5 次 → 单簧管（最硬的一条）"],
-  ["质心极低", "谐波质心 < 2.0、几乎只有基频 → 长笛 / 圆号（靠气声分）"],
-  ["高频很强", "第 9~12 次谐波 > 25% → 小号 / 木琴"],
-  ["锯齿+颤音","质心 ~4、颤音明显 → 小提琴 / 中提琴 / 大提琴（靠音域分）"],
-  ["起音锐利", "起音后 250ms 掉 >8 dB → 钢琴 / 吉他 / 竖琴 / 木琴"],
-  ["簧片拍频", "轻微「哇哇」颤动 → 手风琴"],
-  ["低音区",  "f0 < 165 Hz 且谐波少 → 大号 / 低音提琴 / 巴松 / 定音鼓"]
+  ["偶/奇 < 0.2",  "只有这四种：长笛、低音长笛、单簧管、低音单簧管"],
+  ["偶/奇 0.3~0.5","大号、低音巴松、马林巴、木琴"],
+  ["偶/奇 0.6~0.8","萨克斯、长号、小提琴、中提琴"],
+  ["偶/奇 0.85~1.0","圆号、英国管、竖琴、钟琴、低音提琴、定音鼓"],
+  ["偶/奇 > 1.1",  "双簧管、巴松、小号、钢琴、颤音琴"],
+  ["高频 > 10%",   "萨克斯（16%）—— 唯一明显突出，其他都在 7% 以下"],
+  ["颤音 0.4~0.9", "中提琴、圆号、英国管、短笛"],
+  ["起音断续",     "萨克斯、长号、颤音琴、钟琴、木琴、竖琴、钢琴"],
+  ["无法识别",     "三角铁、小军鼓、锣、吊钹、碎音钹 —— 无稳定基频，谐波法无效"]
 ];
 
-const FAMINFO = [
-  ["边棱",   "短笛、长笛：近乎纯音，只有基频 + 气声；短笛是高八度的长笛"],
-  ["双簧",   "双簧管、英国管、巴松、低音巴松、萨克斯：偶次强、谐波密、带鼻音，靠音域分"],
-  ["簧片",   "单簧管、低音单簧管：偶次谐波几乎消失，这条最可靠"],
-  ["铜管",   "圆号、小号、长号、大号：高频谐波含量 + 音域共同决定"],
-  ["弓弦",   "小提琴、中提琴、大提琴、低音提琴：同一机制，只能靠音域与颤音分"],
-  ["键盘拨弦","钢琴、钢片琴、颤音琴、马林巴、木琴、竖琴、吉他：靠衰减与高频含量区分"],
-  ["风琴",   "管风琴：持续、无起音瞬态"],
-  ["打击",   "定音鼓：有音高。锣、镲、小军鼓、三角铁无音高，谐波法无效"]
-];
 
 /* ================= 音频 ================= */
 const $ = id => document.getElementById(id);
@@ -211,7 +209,6 @@ let fdb=null, lin=null, envBuf=null;
 let lastF0=0;
 
 let envMin=1e9, lastDb=-999, dropList=[], track=null;
-let flatness = 0;   // 频谱平坦度：噪声类远高于乐音
 let f0Hist=[];
 
 // 分析结果缓冲（绘制线程只读）
@@ -227,8 +224,8 @@ async function start(){
       ac = new AC({sampleRate:48000, latencyHint:"interactive"});
       an = ac.createAnalyser();
       an.fftSize = FFT;
-      an.smoothingTimeConstant = 0.45;
-      an.minDecibels = -110; an.maxDecibels = -5;
+      an.smoothingTimeConstant = 0;   // 不平滑：平滑会糊掉谐波结构，Python 分析用的是单窗 FFT
+      an.minDecibels = -160; an.maxDecibels = -5;
       fdb = new Float32Array(an.frequencyBinCount);
       lin = new Float32Array(an.frequencyBinCount);
 
@@ -296,10 +293,16 @@ document.addEventListener("visibilitychange", ()=>{
 
 const binHz = () => ac.sampleRate / an.fftSize;
 
+/* dB → 线性幅度。
+   不能把低电平频点置 0：AnalyserNode 在正常电平下，200~6000 Hz 里
+   过半频点都贴在 minDecibels 底线上，一旦置 0，medianBetween() 的
+   中位数就会是 0，整帧被判为"无信号"。所以用 -100 dB 做下限，始终为正。 */
+const LIN_FLOOR_DB = -160;
 function toLinear(){
+  const f = Math.pow(10, LIN_FLOOR_DB/20);
   for(let i=0;i<fdb.length;i++){
     const v = fdb[i];
-    lin[i] = v < -105 ? 0 : Math.pow(10, v/20);
+    lin[i] = v < LIN_FLOOR_DB ? f : Math.pow(10, v/20);
   }
 }
 
@@ -323,21 +326,6 @@ function medianBetween(f1, f2){
   return t[Math.floor(t.length/2)] || 0;
 }
 
-
-/* 频谱平坦度 = 几何均值 / 算术均值。乐音接近 0，白噪声接近 1。
-   锣、镲、小军鼓、三角铁这类没有稳定基频，靠这个把它们挡在谐波判断之外。 */
-function spectralFlatness(){
-  const b = binHz();
-  const i0 = Math.max(2, Math.ceil(200/b));
-  const i1 = Math.min(lin.length-2, Math.floor(8000/b));
-  let logSum = 0, sum = 0, cnt = 0;
-  for(let i=i0;i<=i1;i++){
-    const v = lin[i];
-    if(v > 0){ logSum += Math.log(v); sum += v; cnt++; }
-  }
-  if(!cnt || sum <= 0) return 1;
-  return Math.exp(logSum/cnt) / (sum/cnt);
-}
 
 function scoreF0(){
   const b = binHz(), sc = new Map();
@@ -408,7 +396,7 @@ function regPenalty(f0, reg){
    限定集合能明显提高准确率（实测 75% vs 50%），但前提是正确答案在集合里——
    如果考试出现清单外的乐器，限定模式会强行从这几种里挑一个错的。
    所以做成可切换。 */
-const EXAM_SET = ["短笛","长笛","双簧管","英国管","单簧管","低音单簧管","巴松","低音巴松","萨克斯","圆号","小号","长号","大号","定音鼓","钢片琴","颤音琴","马林巴","木琴","竖琴","钢琴","小提琴","中提琴","大提琴","低音提琴"];
+const EXAM_SET = ["短笛","长笛","低音长笛","双簧管","英国管","单簧管","低音单簧管","萨克斯","巴松","低音巴松","圆号","小号","长号","大号","马林巴","颤音琴","定音鼓","钟琴","木琴","竖琴","钢琴","小提琴","中提琴","大提琴","低音提琴"];
 let scopeIdx = PROTO.map((p,i)=>EXAM_SET.indexOf(p.n) >= 0 ? i : -1).filter(i=>i>=0);
 
 function setScope(all){
@@ -496,14 +484,8 @@ function analyzeTick(){
   const db = envStep();
   an.getFloatFrequencyData(fdb);
   toLinear();
-
-  flatness = spectralFlatness();
-
   const nf = medianBetween(200, 6000);
   if(db < -74 || nf <= 0){ S.valid=false; resetAcc(); lastF0=0; return; }
-
-  // 噪声型（锣/镲/小军鼓/三角铁）：没有稳定基频，谐波判断不适用
-  if(flatness > 0.16){ S.valid=false; resetAcc(); lastF0=0; return; }
 
   const f0 = scoreF0();
   if(!f0 || f0 < 48){ S.valid=false; resetAcc(); lastF0=0; return; }
@@ -520,13 +502,15 @@ function analyzeTick(){
 
   let odd=0, even=0;
   for(let k=1;k<=12;k++){ if(k%2) odd += hn[k-1]; else even += hn[k-1]; }
-  const evenOdd = odd>1e-6 ? even/odd : 99;
-  const eo = Math.log10(Math.max(1e-3, evenOdd));
+  let evenOdd = odd>1e-6 ? even/odd : 99;
+  if(!isFinite(evenOdd)) evenOdd = 99;
+  evenOdd = Math.min(100, Math.max(0.001, evenOdd));   // 夹紧，防个别谐波取到 0 时爆出 1e140
+  const eo = Math.log10(evenOdd);
 
   let cw=0, cs=0;
   for(let k=1;k<=12;k++){ cw += k*hn[k-1]; cs += hn[k-1]; }
-  const cen = cs>0 ? cw/cs : 1;
-  const hi = (hn[8]+hn[9]+hn[10]+hn[11])/4;
+  const cen = Math.min(12, Math.max(1, cs>0 ? cw/cs : 1));
+  const hi = Math.min(1, Math.max(0, (hn[8]+hn[9]+hn[10]+hn[11])/4));
 
   let na=0, nc=0;
   for(let k=1;k<=8;k++){
@@ -539,15 +523,21 @@ function analyzeTick(){
   const drop = dropList.length ? median(dropList) : 0;
   const perc = drop > 8 ? 1 : 0;
 
+  /* 颤音。关键：基频估计会跳八度（HPS 有时锁到泛音上），
+     若不剔除，跳变会被当成剧烈颤音 —— 这一条曾经让所有乐器都判成弓弦。
+     所以只保留中位数 ±10% 以内的样本（八度误差是 ±100%，会被滤掉）。 */
   let vib = 0;
   f0Hist.push(f0);
   if(f0Hist.length > 60) f0Hist.shift();
   if(!perc && f0Hist.length >= 40){
     const med = median(f0Hist);
-    let v=0;
-    for(const f of f0Hist) v += Math.pow(1200*Math.log2(f/med), 2);
-    const sd = Math.sqrt(v/f0Hist.length);
-    vib = Math.min(1, Math.max(0, (sd-15)/45));
+    const keep = f0Hist.filter(f => Math.abs(f/med - 1) < 0.10);
+    if(keep.length >= 20){
+      let v=0;
+      for(const f of keep) v += Math.pow(1200*Math.log2(f/med), 2);
+      const sd = Math.sqrt(v/keep.length);
+      vib = Math.min(1, Math.max(0, (sd-15)/45));
+    }
   }
 
   const F = {eo, cen, hi, perc, noise, vib};
@@ -641,9 +631,16 @@ function sessionPosterior(){
   // 族级聚合：把同族成员的概率加起来。
   // 族内区分本来就不稳（小提琴/中提琴/大提琴会把分数摊薄），
   // 但"这是弓弦不是铜管"这件事是可靠的，所以族级要单独给出来。
-  const famSum = {};
-  for(const o of raw) famSum[o.fam] = (famSum[o.fam] || 0) + o.p;
-  const fams = Object.entries(famSum).sort((a,b)=>b[1]-a[1]);
+  /* 族级概率取族内**平均**而非求和：求和会让成员多的族（双簧 5 个、
+     键盘拨弦 7 个）天然占便宜，实测把大量乐器误拉进双簧族。 */
+  const famSum = {}, famCnt = {};
+  for(const o of raw){
+    famSum[o.fam] = (famSum[o.fam] || 0) + o.p;
+    famCnt[o.fam] = (famCnt[o.fam] || 0) + 1;
+  }
+  const fams = Object.entries(famSum)
+    .map(([f,s]) => [f, s / famCnt[f]])
+    .sort((a,b)=>b[1]-a[1]);
 
   return { post: raw, agree, hits, medF, evenOdd, fams };
 }
@@ -720,9 +717,7 @@ function paintUI(){
     setText("vF0","—"); setText("vEO","—"); setText("vCEN","—");
     setText("vHI","—"); setText("vATK","—"); setText("vVIB","—");
     if(lastUI.ruleHtml !== "__idle__"){
-      $("rule").innerHTML = flatness > 0.16
-        ? `<span class="idle">这是<strong style="color:#ffb020">无音高打击乐或噪声</strong>（锣 / 镲 / 小军鼓 / 三角铁一类）—— 没有稳定基频，谐波法对它无效</span>`
-        : `<span class="idle">信号太弱或没有稳定音高 —— 等乐句进来</span>`;
+      $("rule").innerHTML = `<span class="idle">信号太弱或没有稳定音高 —— 等乐句进来</span>`;
       $("cand").innerHTML = "";
       lastUI.ruleHtml = "__idle__"; lastUI.candKey = "";
     }
@@ -794,9 +789,12 @@ function renderSession(){
 
   const top1 = R.post[0];
   const famTop = R.fams[0];
+  const famMembers = (FAM_MEMBERS[famTop[0]] || []).join(" / ");
   const hTop = `${famTop[0]}族 <span class="fam">${Math.round(famTop[1]*100)}%</span>` +
                `<div style="font-size:13px;font-weight:600;color:#b9c6d2;margin-top:2px">` +
-               `族内最可能：${top1.n} ${Math.round(top1.p*100)}%</div>`;
+               `族内最可能：${top1.n} ${Math.round(top1.p*100)}%</div>` +
+               `<div style="font-size:11.5px;color:#7d8b9a;margin-top:3px;line-height:1.5">` +
+               `本族：${famMembers}</div>`;
   if(hTop !== lastSess.top){ $("sessTop").innerHTML = hTop; lastSess.top = hTop; }
 
   const candKey = R.post.slice(0,4).map(o=>o.n+Math.round(o.p*100)).join(',');
@@ -879,7 +877,7 @@ window.addEventListener("resize", fitCanvas);
 window.addEventListener("orientationchange", ()=>setTimeout(fitCanvas,150));
 
 $("reftable").innerHTML = REF.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join("");
-$("famtable").innerHTML = FAMINFO.map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+$("famtable").innerHTML = FAM_ORDER.map(f=>`<tr><td>${f}族</td><td>${FAM_MEMBERS[f].join(" / ")}</td></tr>`).join("");
 
 fitCanvas();
 
