@@ -57,6 +57,21 @@ td:first-child{color:var(--acc);white-space:nowrap;width:76px;font-weight:600}
 .note{font-size:11.5px;color:var(--dim);margin-top:9px;line-height:1.6}
 .warnbox{border-color:#4a3a12;background:#1a1608}
 .warnbox .t{color:#d8b866;font-size:12px;line-height:1.6}
+
+/* 累积结论面板 */
+.sess{border-color:#234; background:#0e1620}
+.sesshead{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.sesstitle{font-size:13px;font-weight:600;letter-spacing:.4px;color:var(--acc)}
+.sessinfo{margin-left:auto;font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+.sessTop{font-size:22px;font-weight:700;letter-spacing:.5px;line-height:1.25;color:#fff}
+.sessTop .fam{font-size:12.5px;font-weight:600;color:var(--acc);letter-spacing:0}
+.sessTop.empty{font-size:14px;font-weight:400;color:var(--dim)}
+.sessmeta{font-size:11.5px;color:var(--dim);margin-top:7px;line-height:1.6}
+.sessbtn{width:100%;margin-top:9px;padding:7px;font-size:12.5px;color:var(--dim)}
+.scoperow{display:flex;gap:7px;margin:0 0 8px}
+.scbtn{flex:1;padding:6px 8px;font-size:11.5px;border-radius:8px;color:var(--dim);
+  background:#0c1219;border:1px solid #1b2530}
+.scbtn.act{color:var(--acc);border-color:#2c5a48;background:#0f1a16}
 </style>
 </head>
 <body>
@@ -86,14 +101,31 @@ td:first-child{color:var(--acc);white-space:nowrap;width:76px;font-weight:600}
     </div>
   </div>
 
+  <div class="panel sess">
+    <div class="sesshead">
+      <span class="sesstitle">累积结论</span>
+      <span class="sessinfo" id="sessInfo">样本 0</span>
+    </div>
+    <div class="scoperow">
+      <button class="scbtn act" id="scExam">考试 6 种</button>
+      <button class="scbtn" id="scAll">全库 24 种</button>
+    </div>
+    <div id="sessTop" class="sessTop">—</div>
+    <ul class="cand" id="sessCand"></ul>
+    <div class="sessmeta" id="sessMeta"></div>
+    <div class="note">百分比 = 各帧概率的平均值，不是校准过的准确率。族级分布和一致率比它更可信。</div>
+    <button id="sessReset" class="sessbtn">重新开始累积</button>
+  </div>
+
   <div class="panel">
     <div class="msg" id="msg" style="display:none"></div>
     <div id="rule"><span class="idle">按「开始」并授权麦克风</span></div>
     <ul class="cand" id="cand"></ul>
+    <div class="note">这一块是 <strong>瞬时</strong> 读数，会跳动，用来看判据数值；上面的「累积结论」才是一段音频的综合判断。</div>
   </div>
 
   <div class="panel warnbox">
-    <div class="t">测的是<strong>判据数值</strong>，不是答案。合成数据实测：候选排序 top-1 约 54%、top-3 约 91%，真实教室回放下更低。<strong>以规则命中的族为主判断，候选列表只当参考。</strong></div>
+    <div class="t">测的是<strong>判据数值</strong>，不是答案。合成数据实测：限定考试 6 种时 top-1 约 <strong>75%</strong>、top-3 100%；切到全库 24 种掉到约 50%。<strong>以族级分布和一致率为主判断。</strong></div>
   </div>
 
   <div class="panel">
@@ -115,6 +147,7 @@ const PROTO = [
   {n:"单簧管",  eo:-1.54, cen:3.86, hi:0.081, perc:0, noise:0.000, vib:0.00, reg:[150,2000], fam:"簧片"},
   {n:"笙",      eo:-0.96, cen:4.10, hi:0.105, perc:0, noise:0.000, vib:0.00, reg:[200,2000], fam:"簧片"},
   {n:"双簧管",  eo:-0.12, cen:3.89, hi:0.094, perc:0, noise:0.000, vib:0.16, reg:[230,1400], fam:"双簧"},
+  {n:"巴松",    eo:-0.10, cen:4.17, hi:0.127, perc:0, noise:0.000, vib:0.00, reg:[60,400],   fam:"双簧"},
   {n:"长笛",    eo:-0.91, cen:1.46, hi:0.006, perc:0, noise:0.000, vib:0.11, reg:[260,2100], fam:"边棱"},
   {n:"笛子",    eo:-0.72, cen:1.81, hi:0.012, perc:0, noise:0.001, vib:0.15, reg:[290,2100], fam:"边棱"},
   {n:"小号",    eo:-0.05, cen:4.98, hi:0.282, perc:0, noise:0.000, vib:0.00, reg:[165,1000], fam:"铜管"},
@@ -155,7 +188,7 @@ const REF = [
 
 const FAMINFO = [
   ["簧片",   "单簧管、笙：偶次谐波几乎消失，这条最可靠"],
-  ["双簧",   "双簧管：偶次强、谐波密、带鼻音"],
+  ["双簧",   "双簧管、巴松：偶次强、谐波密、带鼻音；巴松音域更低（60~400 Hz）"],
   ["边棱",   "长笛、笛子：近乎纯音，只有基频 + 气声"],
   ["铜管",   "小号、长号、圆号、大号：高频谐波含量 + 音域共同决定"],
   ["弓弦",   "小提琴、中提琴、大提琴、低音提琴、二胡：同一机制，只能靠音域与颤音分"],
@@ -214,6 +247,10 @@ async function start(){
     $("dot").className = "dot on";
     $("btn").textContent = "停止";
     $("msg").style.display = "none";
+
+    newSession();
+    lastSess.top = lastSess.cand = lastSess.meta = lastSess.info = "";
+    lastUI.ruleHtml = ""; lastUI.candKey = "";
 
     await keepAwake();
     clearInterval(tickTimer);
@@ -348,21 +385,44 @@ function regPenalty(f0, reg){
   return x<lo ? lo-x : (x>hi ? x-hi : 0);
 }
 
+/* 候选集：默认限定为老师练习用到的 6 种。
+   限定集合能明显提高准确率（实测 75% vs 50%），但前提是正确答案在集合里——
+   如果考试出现清单外的乐器，限定模式会强行从这几种里挑一个错的。
+   所以做成可切换。 */
+const EXAM_SET = ["巴松","大提琴","低音提琴","长笛","钢琴","竖琴"];
+let scopeIdx = PROTO.map((p,i)=>EXAM_SET.indexOf(p.n) >= 0 ? i : -1).filter(i=>i>=0);
+
+function setScope(all){
+  const keep = all ? null : EXAM_SET;
+  scopeIdx = PROTO.map((p,i)=> i).filter(i => !keep || keep.indexOf(PROTO[i].n) >= 0);
+  newSession();
+  lastUI.ruleHtml = ""; lastUI.candKey = "";
+  lastSess.top = lastSess.cand = lastSess.meta = lastSess.info = "";
+}
+
 function classify(F, f0){
-  const out = PROTO.map(p=>{
-    let d=0;
+  const out = new Array(PROTO.length);
+  let mx = -1e18;
+  for(const i of scopeIdx){
+    const p = PROTO[i];
+    let d = 0;
     for(const k of DIMS){
       const z = (F[k]-p[k])/SIG[k];
       d += WGT[k]*z*z;
     }
     const r = regPenalty(f0, p.reg);
     d += REG_W*r*r;
-    return {n:p.n, fam:p.fam, d};
-  });
-  const mx = Math.max(...out.map(o=>-o.d));
-  let sum=0;
-  for(const o of out){ o.e = Math.exp(-o.d-mx); sum += o.e; }
-  for(const o of out) o.p = o.e/sum;
+    out[i] = { n:p.n, fam:p.fam, d };
+    if(-d > mx) mx = -d;
+  }
+  // 未入选的乐器概率恒为 0，但保留数组长度与 PROTO 对齐
+  for(let i=0;i<PROTO.length;i++){
+    if(!out[i]) out[i] = { n:PROTO[i].n, fam:PROTO[i].fam, d:1e9, p:0 };
+  }
+  let sum = 0;
+  for(const i of scopeIdx){ out[i].e = Math.exp(-out[i].d - mx); sum += out[i].e; }
+  if(sum <= 0) sum = 1;
+  for(const i of scopeIdx) out[i].p = out[i].e / sum;
   return out;
 }
 
@@ -405,7 +465,11 @@ function ruleEngine(F){
 
 /* ================= 分析 tick（30 Hz，与绘制解耦） ================= */
 let acc=[];
-function resetAcc(){ acc.length=0; }
+function resetAcc(){
+  acc.length = 0;
+  // 信号中断超过 2.5 秒就认为一段音频结束了，重新开始累积
+  if(sess && sess.n > 0 && performance.now() - lastValidAt > 2500) newSession();
+}
 
 function analyzeTick(){
   if(!running || frozen || !an) return;
@@ -474,6 +538,90 @@ function analyzeTick(){
 
   S = { f0, evenOdd, cen, hi, noise, vib, perc, drop,
         merged, hits: ruleEngine({f0, evenOdd, cen, hi, noise, vib, perc, drop}), valid:true };
+
+  accumulate(F, f0, ranked);
+}
+
+/* ================= 累积证据 =================
+   每帧是一个观测，把各帧的 softmax 概率做算术平均。
+   为什么不用几何平均（先取对数再累加）：
+     几何平均奖励"两边都不极端"的候选。实测单簧管+小提琴各半段的音频，
+     几何平均会给出"笙 46%"这种荒谬结果，因为笙在两种情况下都拿到中等概率。
+   为什么不用概率直接相加：
+     会让 10 秒音频累积出 99.99% 的虚假置信度。帧之间高度相关，不是独立证据。
+   算术平均是"整段音频的期望判断"：单簧管半段+小提琴半段 → 各约 45%，
+   这本身就是有价值的信息（说明这段混了两种乐器）。
+   同时记录"第一名在多少帧里也是第一名"，这个一致率才是可信度。
+   ============================================ */
+const NB = 120;                    // 特征滑窗上限（约 4 秒）
+let sess = null;
+let lastValidAt = 0;
+
+function newSession(){
+  sess = {
+    n: 0,
+    sum: new Float64Array(PROTO.length),
+    top: new Int32Array(PROTO.length),
+    eo: [], cen: [], hi: [], noise: [], vib: [],
+    percN: 0, f0sum: 0
+  };
+}
+
+function pushMedian(buf, v){
+  buf.push(v);
+  if(buf.length > NB) buf.shift();
+}
+
+function accumulate(F, f0, ranked){
+  if(!sess) newSession();
+  lastValidAt = performance.now();
+  sess.n++;
+  for(let i=0;i<PROTO.length;i++) sess.sum[i] += ranked[i].p;
+
+  let bi=0, bp=-1;
+  for(let i=0;i<PROTO.length;i++){ if(ranked[i].p > bp){ bp = ranked[i].p; bi = i; } }
+  sess.top[bi]++;
+
+  pushMedian(sess.eo, F.eo);
+  pushMedian(sess.cen, F.cen);
+  pushMedian(sess.hi, F.hi);
+  pushMedian(sess.noise, F.noise);
+  pushMedian(sess.vib, F.vib);
+  if(F.perc) sess.percN++;
+  sess.f0sum += f0;
+}
+
+function sessionPosterior(){
+  if(!sess || sess.n < 1) return null;
+  const raw = PROTO.map((p,i)=>({ n:p.n, fam:p.fam, p: sess.sum[i] / sess.n }));
+  raw.sort((a,b)=>b.p-a.p);
+
+  const topName = raw[0].n;
+  const topIdx = PROTO.findIndex(p=>p.n===topName);
+  const agree = sess.n ? sess.top[topIdx] / sess.n : 0;
+
+  // 用整段的特征中位数跑规则引擎 —— 比任何单帧都稳
+  const medF = {
+    eo: median(sess.eo), cen: median(sess.cen), hi: median(sess.hi),
+    noise: median(sess.noise), vib: median(sess.vib),
+    perc: (sess.percN / sess.n) > 0.5 ? 1 : 0,
+    percRatio: sess.percN / sess.n
+  };
+  const evenOdd = Math.pow(10, medF.eo);
+  const hits = ruleEngine({
+    f0: sess.f0sum / sess.n, evenOdd, cen: medF.cen, hi: medF.hi,
+    noise: medF.noise, vib: medF.vib, perc: medF.perc,
+    drop: medF.perc ? 12 : 0
+  });
+
+  // 族级聚合：把同族成员的概率加起来。
+  // 族内区分本来就不稳（小提琴/中提琴/二胡会把分数摊薄），
+  // 但"这是弓弦不是铜管"这件事是可靠的，所以族级要单独给出来。
+  const famSum = {};
+  for(const o of raw) famSum[o.fam] = (famSum[o.fam] || 0) + o.p;
+  const fams = Object.entries(famSum).sort((a,b)=>b[1]-a[1]);
+
+  return { post: raw, agree, hits, medF, evenOdd, fams };
 }
 
 /* ================= 绘制（60 Hz，只读快照） ================= */
@@ -592,6 +740,67 @@ function paintUI(){
   }
 }
 
+/* ================= 累积结论渲染 ================= */
+const lastSess = { top:"", cand:"", meta:"", info:"" };
+
+function renderSession(){
+  const n = sess ? sess.n : 0;
+
+  const info = n ? ("样本 " + n) : "样本 0";
+  if(info !== lastSess.info){ $("sessInfo").textContent = info; lastSess.info = info; }
+
+  if(!n){
+    const h = `<div class="sessTop empty">还没开始累积 —— 播放音频后自动收集</div>`;
+    if(h !== lastSess.top){ $("sessTop").innerHTML = h; lastSess.top = h; }
+    if(lastSess.cand !== ""){ $("sessCand").innerHTML = ""; lastSess.cand = ""; }
+    if(lastSess.meta !== ""){ $("sessMeta").innerHTML = ""; lastSess.meta = ""; }
+    return;
+  }
+
+  const R = sessionPosterior();
+  if(!R) return;
+
+  if(n < 20){
+    const h = `<div class="sessTop empty">收集中… 还需要约 ${Math.ceil((20-n)/30)} 秒</div>`;
+    if(h !== lastSess.top){ $("sessTop").innerHTML = h; lastSess.top = h; }
+    return;
+  }
+
+  const top1 = R.post[0];
+  const famTop = R.fams[0];
+  const hTop = `${famTop[0]}族 <span class="fam">${Math.round(famTop[1]*100)}%</span>` +
+               `<div style="font-size:13px;font-weight:600;color:#b9c6d2;margin-top:2px">` +
+               `族内最可能：${top1.n} ${Math.round(top1.p*100)}%</div>`;
+  if(hTop !== lastSess.top){ $("sessTop").innerHTML = hTop; lastSess.top = hTop; }
+
+  const candKey = R.post.slice(0,4).map(o=>o.n+Math.round(o.p*100)).join(',');
+  if(candKey !== lastSess.cand){
+    $("sessCand").innerHTML = R.post.slice(0,4).map((o,i)=>{
+      const v = o.p*100;
+      return `<li><span class="nm">${o.n}</span>` +
+        `<span class="bar"><i style="width:${Math.max(2,Math.round(v))}%"></i></span>` +
+        `<span class="pc">${v<1?'<1':v.toFixed(0)}%</span></li>`;
+    }).join("");
+    lastSess.cand = candKey;
+  }
+
+  const agreePct = Math.round(R.agree*100);
+  const famLine = R.fams.slice(0,4)
+    .map(([f,p])=>`${f} ${Math.round(p*100)}%`).join('　');
+  let meta = `<div>族级分布：${famLine}</div>`;
+  meta += `<div>第一名在 <b>${agreePct}%</b> 的帧里也是第一名`;
+  if(agreePct < 55) meta += `　<span style="color:#ffb020">不稳定，这段可能混了多种乐器</span>`;
+  meta += `</div>`;
+  if(R.hits.length){
+    const h = R.hits[0];
+    meta += `<div style="margin-top:4px">整段判据 → <span style="color:#ffb020">${h[0]}</span> ${h[1]}，<span style="color:#3ddc97">${h[2]}</span></div>`;
+  }else{
+    meta += `<div style="margin-top:4px">整段判据不明确</div>`;
+  }
+  meta += `<div style="margin-top:4px">中位特征：质心 ${R.medF.cen.toFixed(2)}　高频 ${(R.medF.hi*100).toFixed(0)}%　偶/奇 ${R.evenOdd.toFixed(2)}　${R.medF.perc?'断续':'持续'}　颤音 ${R.medF.vib.toFixed(2)}</div>`;
+  if(meta !== lastSess.meta){ $("sessMeta").innerHTML = meta; lastSess.meta = meta; }
+}
+
 let lastPaint = 0;
 let rafLoop = function(){
   rafId = requestAnimationFrame(rafLoop);
@@ -601,6 +810,7 @@ let rafLoop = function(){
   if(now - lastPaint > 125){           // 8 Hz：读数字，人眼够用
     lastPaint = now;
     paintUI();
+    renderSession();
   }
 };
 
@@ -610,6 +820,23 @@ $("btn").onclick = () => { running ? stop() : start(); };
 $("freeze").onclick = () => {
   frozen = !frozen;
   $("freeze").textContent = frozen ? "已锁定 · 点击恢复" : "锁定当前读数";
+};
+
+$("sessReset").onclick = () => {
+  newSession();
+  lastSess.top = lastSess.cand = lastSess.meta = lastSess.info = "";
+  renderSession();
+};
+
+$("scExam").onclick = () => {
+  setScope(false);
+  $("scExam").classList.add("act"); $("scAll").classList.remove("act");
+  renderSession();
+};
+$("scAll").onclick = () => {
+  setScope(true);
+  $("scAll").classList.add("act"); $("scExam").classList.remove("act");
+  renderSession();
 };
 
 $("tabA").onclick = () => {
